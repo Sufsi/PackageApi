@@ -14,7 +14,7 @@ public class PackageDatabase : IDatabase
 
     public Package GetPackage(string kolliId)
     {
-        return packages.Where(pk => pk.KolliId == kolliId).First();
+        return packages.FirstOrDefault(pk => pk.KolliId == kolliId);
     }
 
     public IEnumerable<Package> GetAllPackages()
