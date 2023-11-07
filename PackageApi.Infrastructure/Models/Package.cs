@@ -4,7 +4,6 @@ public class Package : Entity
 {
     public Package(string kolliId, double weight, Dimensions dimensions)
     {
-        Id = new Guid();
         KolliId = kolliId;
         Weight = weight;
         Dimensions = dimensions;
