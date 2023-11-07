@@ -15,7 +15,7 @@ public class PackageDatabaseTests
 
         // Assert
         Assert.IsNotNull(packages);
-        Assert.AreEqual(3, packages.Count()); // Adjust the count as needed
+        Assert.AreEqual(3, packages.Count()); // This has a weird behaviour as to make it easier for myself my "database" list is static so this depends on which order the tests are run at
     }
     [TestMethod]
     public void AddPackage_AddsPackageSuccessfully()

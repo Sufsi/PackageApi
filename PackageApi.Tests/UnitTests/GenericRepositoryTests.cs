@@ -15,7 +15,7 @@ public class GenericRepositoryTests
 
         // Assert
         Assert.IsNotNull(packages);
-        Assert.AreEqual(2, packages.Count()); // Adjust the count as needed
+        Assert.AreEqual(2, packages.Count()); // This has a weird behaviour as to make it easier for myself my "database" list is static so this depends on which order the tests are run at
     }
     [TestMethod]
     public async Task Create_PackageEntity_CreatesPackageSuccessfully()
