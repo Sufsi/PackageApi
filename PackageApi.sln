@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackageApi.Shared", "Packag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackageApi.Infrastructure", "PackageApi.Infrastructure\PackageApi.Infrastructure.csproj", "{02A4A1D9-694A-4892-BC4B-AC43D404EAE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackageApi.Tests", "PackageApi.Tests\PackageApi.Tests.csproj", "{8C9087A6-D4EA-4193-B24B-260A6DC56B7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{02A4A1D9-694A-4892-BC4B-AC43D404EAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02A4A1D9-694A-4892-BC4B-AC43D404EAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A4A1D9-694A-4892-BC4B-AC43D404EAE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C9087A6-D4EA-4193-B24B-260A6DC56B7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C9087A6-D4EA-4193-B24B-260A6DC56B7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C9087A6-D4EA-4193-B24B-260A6DC56B7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C9087A6-D4EA-4193-B24B-260A6DC56B7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
