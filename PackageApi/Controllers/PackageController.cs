@@ -1,5 +1,4 @@
-﻿using MapsterMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PackageApi.Infrastructure;
 using PackageApi.Shared.Models;
 
@@ -11,44 +10,39 @@ public class PackageController : ControllerBase
 {
     private readonly ILogger<PackageController> logger;
     private readonly IRepositoryFactory repositoryFactory;
-    private readonly IMapper mapper;
 
-    public PackageController(ILogger<PackageController> logger, IRepositoryFactory repositoryFactory, IMapper mapper)
+    public PackageController(ILogger<PackageController> logger, IRepositoryFactory repositoryFactory)
     {
         this.logger = logger;
         this.repositoryFactory = repositoryFactory;
-        this.mapper = mapper;
     }
 
-    [HttpGet(Name = "Package")]
-    [Route("/package")]
+    [HttpGet("/package")]
     public ActionResult<IEnumerable<Package>> GetPackages()
     {
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
-        var result = repo.GetAll();
+        var result = repo.GetAll().Result;
 
-        return Ok(mapper.Map<IEnumerable<Package>>(result));
+        var packages = result.Select(item => new Package(item.KolliId, item.Weight, new Dimensions(item.Dimensions.Length, item.Dimensions.Height, item.Dimensions.Width)));
+        return Ok(packages);
     }
 
-    [HttpGet(Name = "Package")]
-    [Route("/package/{kolliId}")]
+    [HttpGet("/package/{kolliId}")]
     public ActionResult<Package> GetPackageDimensions(string kolliId)
     {
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
         var result = repo.Get(kolliId).Result;
 
-        return Ok(mapper.Map<Package>(result));
+        var package = new Package(result.KolliId, result.Weight, new Dimensions(result.Dimensions.Length, result.Dimensions.Height, result.Dimensions.Width));
+        return Ok(package);
     }
 
-    [HttpPost(Name = "Package")]
-    [Route("/package")]
+    [HttpPost("/package")]
     public ActionResult<Package> CreatePackage(Package package)
     {
-        var dto = mapper.Map<Infrastructure.Models.Package>(package);
-
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
-        var result = repo.Create(dto);
+        var result = repo.Create(new Infrastructure.Models.Package(package.KolliId, package.Weight, new Infrastructure.Models.Dimensions(package.Dimensions.Length, package.Dimensions.Height, package.Dimensions.Width)));
 
-        return Ok();
+        return Ok(result);
     }
 }
