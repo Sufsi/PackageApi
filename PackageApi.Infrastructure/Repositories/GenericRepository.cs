@@ -10,12 +10,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : Entity
         throw new NotImplementedException();
     }
 
-    public Task Get(string id)
+    public Task<T> Get(string id)
     {
         throw new NotImplementedException();
     }
 
-    public Task GetAll()
+    public Task<IEnumerable<T>> GetAll()
     {
         throw new NotImplementedException();
     }

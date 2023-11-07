@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using PackageApi.Infrastructure;
 using PackageApi.Shared.Models;
 
 namespace PackageApi.Controllers;
@@ -7,31 +9,46 @@ namespace PackageApi.Controllers;
 [Route("[controller]")]
 public class PackageController : ControllerBase
 {
-    private readonly ILogger<PackageController> _logger;
+    private readonly ILogger<PackageController> logger;
+    private readonly IRepositoryFactory repositoryFactory;
+    private readonly IMapper mapper;
 
-    public PackageController(ILogger<PackageController> logger)
+    public PackageController(ILogger<PackageController> logger, IRepositoryFactory repositoryFactory, IMapper mapper)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.repositoryFactory = repositoryFactory;
+        this.mapper = mapper;
     }
 
     [HttpGet(Name = "Package")]
     [Route("/package")]
-    public IEnumerable<Package> GetPackages()
+    public ActionResult<IEnumerable<Package>> GetPackages()
     {
-        return new List<Package>();
+        var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
+        var result = repo.GetAll();
+
+        return Ok(mapper.Map<IEnumerable<Package>>(result));
     }
 
     [HttpGet(Name = "Package")]
     [Route("/package/{kolliId}")]
-    public Package GetPackageDimensions(string kolliId)
+    public ActionResult<Package> GetPackageDimensions(string kolliId)
     {
-        return new(default, default, default);
+        var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
+        var result = repo.Get(kolliId).Result;
+
+        return Ok(mapper.Map<Package>(result));
     }
 
     [HttpPost(Name = "Package")]
     [Route("/package")]
-    public Package CreatePackage()
+    public ActionResult<Package> CreatePackage(Package package)
     {
-        return new(default, default, default);
+        var dto = mapper.Map<Infrastructure.Models.Package>(package);
+
+        var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
+        var result = repo.Create(dto);
+
+        return Ok();
     }
 }

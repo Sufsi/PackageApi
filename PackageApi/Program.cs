@@ -3,6 +3,8 @@ using PackageApi.Infrastructure.Factory;
 using PackageApi.Infrastructure;
 using PackageApi.Infrastructure.Interfaces;
 using PackageApi.Infrastructure.Repositories;
+using Mapster;
+using MapsterMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,10 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IRepositoryFactory, RepositoryFactory>();
+
+var config = TypeAdapterConfig.GlobalSettings;
+builder.Services.AddSingleton(config);
+builder.Services.AddScoped<IMapper, ServiceMapper>();
 
 var app = builder.Build();
 

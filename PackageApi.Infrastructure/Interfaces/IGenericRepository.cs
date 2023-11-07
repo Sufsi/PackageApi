@@ -4,7 +4,7 @@ namespace PackageApi.Infrastructure.Interfaces;
 
 public interface IGenericRepository<T> where T : Entity
 {
-    Task GetAll();
-    Task Get(string id);
+    Task<IEnumerable<T>> GetAll();
+    Task<T> Get(string id);
     Task Create(T entity);
 }
