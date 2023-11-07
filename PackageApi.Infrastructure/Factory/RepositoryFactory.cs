@@ -2,20 +2,19 @@
 using PackageApi.Infrastructure.Interfaces;
 using PackageApi.Infrastructure.Models;
 
-namespace PackageApi.Infrastructure.Factory
+namespace PackageApi.Infrastructure.Factory;
+
+public class RepositoryFactory : IRepositoryFactory
 {
-    public class RepositoryFactory : IRepositoryFactory
+    private readonly IServiceProvider ServiceProvider;
+
+    public RepositoryFactory(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider ServiceProvider;
+        ServiceProvider = serviceProvider;
+    }
 
-        public RepositoryFactory(IServiceProvider serviceProvider)
-        {
-            ServiceProvider = serviceProvider;
-        }
-
-        public IGenericRepository<T> GetRepository<T>() where T : Package
-        {
-            return ServiceProvider.GetRequiredService<IGenericRepository<T>>();
-        }
+    public IGenericRepository<T> GetRepository<T>() where T : Entity
+    {
+        return ServiceProvider.GetRequiredService<IGenericRepository<T>>();
     }
 }
