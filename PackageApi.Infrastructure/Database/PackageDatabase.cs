@@ -12,7 +12,7 @@ public class PackageDatabase : IDatabase
         return true;
     }
 
-    public Package GetPackageDimensions(string kolliId)
+    public Package GetPackage(string kolliId)
     {
         return packages.Where(pk => pk.KolliId == kolliId).First();
     }

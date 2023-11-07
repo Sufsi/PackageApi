@@ -21,7 +21,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : Entity
 
     public Task<T> Get(string id)
     {
-        var result = Database.GetPackageDimensions(id);
+        var result = Database.GetPackage(id);
 
         return Task.FromResult(result as T);
     }
