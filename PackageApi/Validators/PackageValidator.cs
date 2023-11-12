@@ -30,16 +30,16 @@ public class DimensionsValidator : AbstractValidator<Dimensions>
     public DimensionsValidator()
     {
         RuleFor(package => package.Weight)
-        .InclusiveBetween(0, 20000).WithMessage("Weight must be between 0 and 20000.");
+        .InclusiveBetween(0, 20000).WithMessage("Weight must be between 0 and 20000g.");
 
         RuleFor(package => package.Length)
-            .InclusiveBetween(0, 60).WithMessage("Length must be between 0 and 60.");
+            .InclusiveBetween(0, 60).WithMessage("Length must be between 0 and 60cm.");
 
         RuleFor(package => package.Height)
-            .InclusiveBetween(0, 60).WithMessage("Height must be between 0 and 60.");
+            .InclusiveBetween(0, 60).WithMessage("Height must be between 0 and 60cm.");
 
         RuleFor(package => package.Width)
-            .InclusiveBetween(0, 60).WithMessage("Width must be between 0 and 60.");
+            .InclusiveBetween(0, 60).WithMessage("Width must be between 0 and 60cm.");
 
     }
 }

@@ -10,9 +10,9 @@ public class Dimensions
         Width = width;
         IsValid = isValid;
     }
-    public double Weight { get; set; }
-    public int Length { get; set; }
-    public int Height { get; set; }
-    public int Width { get; set; }
-    public bool IsValid { get; set; }
+    public double Weight { get; }
+    public int Length { get; }
+    public int Height { get; }
+    public int Width { get; }
+    public bool IsValid { get; }
 }

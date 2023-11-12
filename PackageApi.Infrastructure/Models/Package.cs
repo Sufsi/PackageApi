@@ -7,6 +7,6 @@ public class Package : Entity
         KolliId = kolliId;
         Dimensions = dimensions;
     }
-    public string KolliId { get; set; }
-    public Dimensions Dimensions { get; set; }
+    public string KolliId { get; }
+    public Dimensions Dimensions { get; }
 }

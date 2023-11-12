@@ -5,10 +5,6 @@ public class Dimensions
     /// <summary>
     /// The dimensions of the package
     /// </summary>
-    /// <param name="weight">Weight of the package in grams. Max 20000g</param>
-    /// <param name="length">Length of the package in cm. Max 60cm</param>
-    /// <param name="height">Height of the package in cm. Max 60cm</param>
-    /// <param name="width">Width of the package in cm. Max 60cm</param>
     public Dimensions(double weight, int length, int height, int width, bool isValid = true)
     {
         Weight = weight;
@@ -17,9 +13,21 @@ public class Dimensions
         Width = width;
         IsValid = isValid;
     }
+    /// <summary>
+    /// Weight of the package in grams. Max 20000g
+    /// </summary>
     public double Weight { get; }
+    /// <summary>
+    /// Length of the package in cm. Max 60cm
+    /// </summary>
     public int Length { get; }
+    /// <summary>
+    /// Height of the package in cm. Max 60cm
+    /// </summary>
     public int Height { get; }
+    /// <summary>
+    /// Width of the package in cm. Max 60cm
+    /// </summary>
     public int Width { get; }
     public bool IsValid { get; }
 
@@ -30,10 +38,6 @@ public class DimensionsRequest
     /// <summary>
     /// The dimensions of the package
     /// </summary>
-    /// <param name="weight">Weight of the package in grams. Max 20000g</param>
-    /// <param name="length">Length of the package in cm. Max 60cm</param>
-    /// <param name="height">Height of the package in cm. Max 60cm</param>
-    /// <param name="width">Width of the package in cm. Max 60cm</param>
     public DimensionsRequest(double weight, int length, int height, int width)
     {
         Weight = weight;
@@ -41,8 +45,20 @@ public class DimensionsRequest
         Height = height;
         Width = width;
     }
+    /// <summary>
+    /// Weight of the package in grams. Max 20000g
+    /// </summary>
     public double Weight { get; }
+    /// <summary>
+    /// Length of the package in cm. Max 60cm
+    /// </summary>
     public int Length { get; }
+    /// <summary>
+    /// Height of the package in cm. Max 60cm
+    /// </summary>
     public int Height { get; }
+    /// <summary>
+    /// Width of the package in cm. Max 60cm
+    /// </summary>
     public int Width { get; }
 }

@@ -25,7 +25,12 @@ public class PackageController : ControllerBase
         this.validator = validator;
     }
 
+    /// <summary>
+    /// Gets all packages
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("/package")]
+    [Produces("application/json")]
     [SwaggerRequestExample(typeof(IEnumerable<Package>), typeof(PackagesExample))]
     [SwaggerResponse((int)HttpStatusCode.OK)]
     [SwaggerResponse((int)HttpStatusCode.NotFound, "No packages was found in the database")]
@@ -41,7 +46,13 @@ public class PackageController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Get specific package
+    /// </summary>
+    /// <param name="kolliId"></param>
+    /// <returns></returns>
     [HttpGet("/package/{kolliId}")]
+    [Produces("application/json")]
     [SwaggerRequestExample(typeof(Package), typeof(PackageExample))]
     [SwaggerResponse((int)HttpStatusCode.OK)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "KolliId did not pass the validation")]
@@ -68,7 +79,13 @@ public class PackageController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Import new package
+    /// </summary>
+    /// <param name="package"></param>
+    /// <returns></returns>
     [HttpPost("/package")]
+    [Produces("application/json")]
     [SwaggerRequestExample(typeof(PackageRequest), typeof(PackageRequestExample))]
     [SwaggerResponse((int)HttpStatusCode.OK)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Package is required")]

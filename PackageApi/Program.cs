@@ -9,6 +9,7 @@ using PackageApi.Facades;
 using Swashbuckle.AspNetCore.Filters;
 using PackageApi.Examples;
 using PackageApi.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Package Api", Version = "1.0" });
+    // Set the comments path for the Swagger JSON and UI.
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+
     c.ExampleFilters();
     c.EnableAnnotations();
 });
