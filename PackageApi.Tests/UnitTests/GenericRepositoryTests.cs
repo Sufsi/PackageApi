@@ -12,10 +12,10 @@ public class GenericRepositoryTests
         var package = new Package("9999123450000000000", new Dimensions(200, 32, 30, 40));
 
         // Act
-        var result = repository.Create(package);
+        var result = await repository.Create(package);
 
         // Assert
-        Assert.IsTrue(result.IsCompletedSuccessfully);
+        Assert.IsTrue(result);
     }
 
     [TestMethod]
