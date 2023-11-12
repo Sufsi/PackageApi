@@ -21,4 +21,12 @@ namespace PackageApi.Examples
            return new Package("999123455432100000", new Dimensions(20000, 32, 54, 34, true));
         }
     }
+
+    public class PackageRequestExample : IExamplesProvider<PackageRequest>
+    {
+        public PackageRequest GetExamples()
+        {
+            return new PackageRequest("999123455432100000", new DimensionsRequest(20000, 32, 54, 34));
+        }
+    }
 }

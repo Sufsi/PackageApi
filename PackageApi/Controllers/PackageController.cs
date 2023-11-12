@@ -33,7 +33,10 @@ public class PackageController : ControllerBase
     {
         var result = await packageFacade.GetPackages();
         if (result == null)
+        {
+            logger.LogInformation($"No packages was found in the database");
             return NotFound($"No packages was found in the database");
+        }
 
         return Ok(result);
     }
@@ -48,29 +51,39 @@ public class PackageController : ControllerBase
         var validate = await validator.ValidateAsync(kolliId);
 
         if (!validate.IsValid)
-            return BadRequest($"KolliId is not valid: {string.Join(", ",validate.Errors.Select(x => x.ErrorMessage))}");
+        {
+            logger.LogInformation($"KolliId is not valid: {string.Join(", ", validate.Errors.Select(x => x.ErrorMessage))}");
+            return BadRequest($"KolliId is not valid: {string.Join(", ", validate.Errors.Select(x => x.ErrorMessage))}");
+        }
 
         var result = await packageFacade.GetPackage(kolliId);
 
         if (result == null)
+        {
+            logger.LogInformation($"KolliId:{kolliId} was not found in the database");
             return NotFound($"KolliId:{kolliId} was not found in the database");
+        }
 
 
         return Ok(result);
     }
 
     [HttpPost("/package")]
-    [SwaggerRequestExample(typeof(Package), typeof(PackageExample))]
+    [SwaggerRequestExample(typeof(PackageRequest), typeof(PackageRequestExample))]
     [SwaggerResponse((int)HttpStatusCode.OK)]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Package is required")]
-    public async Task<ActionResult<bool>> CreatePackage([Required][FromBody]Package package)
+    [SwaggerResponse((int)HttpStatusCode.Conflict, "KolliId already exists in the database")]
+    public async Task<ActionResult<HttpResponseMessage>> CreatePackage([Required][FromBody]PackageRequest package)
     {
         var validate = await validator.ValidateAsync(package.KolliId);
 
         if (!validate.IsValid)
+        {
+            logger.LogInformation($"KolliId is not valid: {string.Join(", ", validate.Errors.Select(x => x.ErrorMessage))}");
             return BadRequest($"KolliId is not valid: {string.Join(", ", validate.Errors.Select(x => x.ErrorMessage))}");
+        }
 
         var result = await packageFacade.CreatePackage(package);
-        return result == true ? Ok() : BadRequest();
+        return result.IsSuccessStatusCode ? Ok() : Conflict($"KolliId:{package.KolliId} already exists in the database");
     }
 }

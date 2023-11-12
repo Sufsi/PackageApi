@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using PackageApi.Infrastructure;
 using PackageApi.Models;
 
 namespace PackageApi.Facades;
 public interface IPackageFacade
 {
-    Task<bool> CreatePackage(Package package);
+    Task<HttpResponseMessage> CreatePackage(PackageRequest package);
     Task<Package?> GetPackage(string kolliId);
     Task<IEnumerable<Package?>> GetPackages();
 }
@@ -40,16 +42,38 @@ public class PackageFacade : IPackageFacade
         return package;
     }
 
-    public async Task<bool> CreatePackage(Package package)
+    public async Task<HttpResponseMessage> CreatePackage(PackageRequest package)
     {
-        var validationResult = await dimensionsValidator.ValidateAsync(package.Dimensions);
+        var converted = ConvertToPackage(package);
+
+        var validationResult = await dimensionsValidator.ValidateAsync(converted.Dimensions);
         logger.LogInformation(validationResult.IsValid ? $"{package.KolliId} valid package" : $"{package.KolliId} contains properties outside of limitations");
 
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
-        var infrastructurePackage = ConvertToInfrastructurePackage(package, validationResult.IsValid);
+        var exists = await repo.Get(converted.KolliId);
+
+        if (exists != null)
+        {
+            logger.LogInformation($"KolliId:{package.KolliId} already exists in the database");
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Conflict);
+        }
+
+
+        var infrastructurePackage = ConvertToInfrastructurePackage(converted, validationResult.IsValid);
         var result = await repo.Create(infrastructurePackage);
 
-        return result != null;
+        return result ? new HttpResponseMessage(System.Net.HttpStatusCode.OK) : new HttpResponseMessage(System.Net.HttpStatusCode.FailedDependency);
+    }
+    private static Package? ConvertToPackage(PackageRequest packageRequest)
+    {
+        return new Package(
+            packageRequest.KolliId,
+            new Dimensions(
+                packageRequest.Dimensions.Weight,
+                packageRequest.Dimensions.Length,
+                packageRequest.Dimensions.Height,
+                packageRequest.Dimensions.Width
+            ));
     }
 
     private static Package? ConvertToPackage(Infrastructure.Models.Package infrastructurePackage)
