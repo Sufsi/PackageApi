@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace PackageApi.Models;
+﻿namespace PackageApi.Models;
 
 public class Dimensions
 {

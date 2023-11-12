@@ -8,6 +8,7 @@ using FluentValidation;
 using PackageApi.Facades;
 using Swashbuckle.AspNetCore.Filters;
 using PackageApi.Examples;
+using PackageApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,12 +24,12 @@ builder.Services.AddSwaggerGen(c =>
     c.EnableAnnotations();
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<PackageExample>();
-builder.Services.AddSwaggerExamplesFromAssemblyOf<PackagesExample>();
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IRepositoryFactory, RepositoryFactory>();
 builder.Services.AddTransient<IPackageFacade, PackageFacade>();
 builder.Services.AddTransient<IDatabase, PackageDatabase>();
+builder.Services.AddTransient<IMapperHelper, MapperHelper>();
 builder.Services.AddValidatorsFromAssemblyContaining<PackageApi.Validators.PackageValidator>();
 
 

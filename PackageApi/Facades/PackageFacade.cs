@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using PackageApi.Infrastructure;
 using PackageApi.Models;
+using PackageApi.Services;
 
 namespace PackageApi.Facades;
 public interface IPackageFacade
@@ -15,12 +14,14 @@ public class PackageFacade : IPackageFacade
 {
     private readonly ILogger<PackageFacade> logger;
     private readonly IRepositoryFactory repositoryFactory;
+    private readonly IMapperHelper mapperHelper;
     private readonly IValidator<Dimensions> dimensionsValidator;
 
-    public PackageFacade(ILogger<PackageFacade> logger, IRepositoryFactory repositoryFactory, IValidator<Dimensions> dimensionsValidator)
+    public PackageFacade(ILogger<PackageFacade> logger, IRepositoryFactory repositoryFactory, IMapperHelper mapperHelper, IValidator<Dimensions> dimensionsValidator)
     {
         this.logger = logger;
         this.repositoryFactory = repositoryFactory;
+        this.mapperHelper = mapperHelper;
         this.dimensionsValidator = dimensionsValidator;
     }
 
@@ -29,7 +30,7 @@ public class PackageFacade : IPackageFacade
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
         var result = await repo.GetAll();
 
-        var packages = result.Select(ConvertToPackage);
+        var packages = result.Select(mapperHelper.ConvertToPackage);
         return packages;
     }
 
@@ -38,13 +39,13 @@ public class PackageFacade : IPackageFacade
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
         var result = await repo.Get(kolliId);
 
-        var package = ConvertToPackage(result);
+        var package = mapperHelper.ConvertToPackage(result);
         return package;
     }
 
     public async Task<HttpResponseMessage> CreatePackage(PackageRequest package)
     {
-        var converted = ConvertToPackage(package);
+        var converted = mapperHelper.ConvertToPackage(package);
 
         var validationResult = await dimensionsValidator.ValidateAsync(converted.Dimensions);
         logger.LogInformation(validationResult.IsValid ? $"{package.KolliId} valid package" : $"{package.KolliId} contains properties outside of limitations");
@@ -59,48 +60,9 @@ public class PackageFacade : IPackageFacade
         }
 
 
-        var infrastructurePackage = ConvertToInfrastructurePackage(converted, validationResult.IsValid);
+        var infrastructurePackage = mapperHelper.ConvertToInfrastructurePackage(converted, validationResult.IsValid);
         var result = await repo.Create(infrastructurePackage);
 
         return result ? new HttpResponseMessage(System.Net.HttpStatusCode.OK) : new HttpResponseMessage(System.Net.HttpStatusCode.FailedDependency);
-    }
-    private static Package? ConvertToPackage(PackageRequest packageRequest)
-    {
-        return new Package(
-            packageRequest.KolliId,
-            new Dimensions(
-                packageRequest.Dimensions.Weight,
-                packageRequest.Dimensions.Length,
-                packageRequest.Dimensions.Height,
-                packageRequest.Dimensions.Width
-            ));
-    }
-
-    private static Package? ConvertToPackage(Infrastructure.Models.Package infrastructurePackage)
-    {
-        return infrastructurePackage != null ? new Package(
-            infrastructurePackage.KolliId,
-            new Dimensions(
-                infrastructurePackage.Dimensions.Weight,
-                infrastructurePackage.Dimensions.Length,
-                infrastructurePackage.Dimensions.Height,
-                infrastructurePackage.Dimensions.Width,
-                infrastructurePackage.Dimensions.IsValid
-            )
-        ) : null;
-    }
-
-    private static Infrastructure.Models.Package ConvertToInfrastructurePackage(Package package, bool isValid)
-    {
-        return new Infrastructure.Models.Package(
-            package.KolliId,
-            new Infrastructure.Models.Dimensions(
-                package.Dimensions.Weight,
-                package.Dimensions.Length,
-                package.Dimensions.Height,
-                package.Dimensions.Width,
-                isValid
-            )
-        );
     }
 }
