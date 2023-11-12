@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PackageApi.Facades;
 using PackageApi.Models;
+using FluentValidation.Results;
+using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace PackageApi.Controllers;
 
@@ -10,11 +13,13 @@ public class PackageController : ControllerBase
 {
     private readonly ILogger<PackageController> logger;
     private readonly IPackageFacade packageFacade;
+    private readonly IValidator<string> validator;
 
-    public PackageController(ILogger<PackageController> logger, IPackageFacade packageFacade)
+    public PackageController(ILogger<PackageController> logger, IPackageFacade packageFacade, IValidator<string> validator)
     {
         this.logger = logger;
         this.packageFacade = packageFacade;
+        this.validator = validator;
     }
 
     [HttpGet("/package")]
@@ -25,9 +30,16 @@ public class PackageController : ControllerBase
     }
 
     [HttpGet("/package/{kolliId}")]
-    public ActionResult<Dimensions> GetPackageDimensions(string kolliId)
+    public ActionResult<Package> GetPackageDimensions([Required][FromRoute] string kolliId)
     {
-        var result = packageFacade.GetPackageDimensions(kolliId);
+        var validate = validator.Validate(kolliId);
+
+        if (!validate.IsValid)
+        {
+            return BadRequest($"KolliId is not valid: {string.Join(", ",validate.Errors.Select(x => x.ErrorMessage))}");
+        }
+
+        var result = packageFacade.GetPackage(kolliId);
         return Ok(result);
     }
 

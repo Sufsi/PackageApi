@@ -1,54 +1,58 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PackageApi.Infrastructure;
 using PackageApi.Models;
+using PackageApi.Validators;
 
 namespace PackageApi.Facades;
 public interface IPackageFacade
 {
-    ActionResult<bool> CreatePackage(Package package);
-    ActionResult<Dimensions> GetPackageDimensions(string kolliId);
-    ActionResult<IEnumerable<Package>> GetPackages();
+    bool CreatePackage(Package package);
+    Package GetPackage(string kolliId);
+    IEnumerable<Package> GetPackages();
 }
 public class PackageFacade : IPackageFacade
 {
+    private readonly ILogger<PackageFacade> logger;
     private readonly IRepositoryFactory repositoryFactory;
+    private readonly IValidator<Package> packageValidator;
 
-    public PackageFacade(IRepositoryFactory repositoryFactory)
+    public PackageFacade(ILogger<PackageFacade> logger, IRepositoryFactory repositoryFactory, IValidator<Package> packageValidator)
     {
+        this.logger = logger;
         this.repositoryFactory = repositoryFactory;
+        this.packageValidator = packageValidator;
     }
 
-    public ActionResult<IEnumerable<Package>> GetPackages()
+    public IEnumerable<Package> GetPackages()
     {
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
         var result = repo.GetAll().Result;
 
-        var packages = result.Select(item => ConvertToPackage(item));
-        return new OkObjectResult(packages);
+        var packages = result.Select(ConvertToPackage);
+        return packages;
     }
 
-    public ActionResult<Dimensions> GetPackageDimensions(string kolliId)
+    public Package GetPackage(string kolliId)
     {
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
         var result = repo.Get(kolliId).Result;
 
-        if (result == null)
-        {
-            return new NotFoundResult();
-        }
-
         var package = ConvertToPackage(result);
-        return new OkObjectResult(package.Dimensions);
+        return package;
     }
 
-    public ActionResult<bool> CreatePackage(Package package)
+    public bool CreatePackage(Package package)
     {
+        var validationResult = packageValidator.Validate(package);
+        logger.LogInformation(validationResult.IsValid ? $"{package.KolliId} valid package" : $"{package.KolliId} contains properties outside of limitations");
+
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();
-        var infrastructurePackage = ConvertToInfrastructurePackage(package);
+        var infrastructurePackage = ConvertToInfrastructurePackage(package, validationResult.IsValid);
         var result = repo.Create(infrastructurePackage);
 
-        return true;
+        return result != null;
     }
 
     private static Package ConvertToPackage(Infrastructure.Models.Package infrastructurePackage)
@@ -59,12 +63,13 @@ public class PackageFacade : IPackageFacade
                 infrastructurePackage.Dimensions.Weight,
                 infrastructurePackage.Dimensions.Length,
                 infrastructurePackage.Dimensions.Height,
-                infrastructurePackage.Dimensions.Width
+                infrastructurePackage.Dimensions.Width,
+                infrastructurePackage.Dimensions.IsValid
             )
         );
     }
 
-    private static Infrastructure.Models.Package ConvertToInfrastructurePackage(Package package)
+    private static Infrastructure.Models.Package ConvertToInfrastructurePackage(Package package, bool isValid)
     {
         return new Infrastructure.Models.Package(
             package.KolliId,
@@ -72,7 +77,8 @@ public class PackageFacade : IPackageFacade
                 package.Dimensions.Weight,
                 package.Dimensions.Length,
                 package.Dimensions.Height,
-                package.Dimensions.Width
+                package.Dimensions.Width,
+                isValid
             )
         );
     }

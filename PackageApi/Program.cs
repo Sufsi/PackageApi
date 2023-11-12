@@ -23,7 +23,7 @@ builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericReposi
 builder.Services.AddTransient<IRepositoryFactory, RepositoryFactory>();
 builder.Services.AddTransient<IPackageFacade, PackageFacade>();
 builder.Services.AddTransient<IDatabase, PackageDatabase>();
-builder.Services.AddValidatorsFromAssemblyContaining<PackageApi.Validators.PackageValidator.KolliValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<PackageApi.Validators.PackageValidator>();
 
 var app = builder.Build();
 
