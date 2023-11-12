@@ -10,7 +10,7 @@ public interface IMapperHelper
 }
 public class MapperHelper : IMapperHelper
 {
-    public Package? ConvertToPackage(PackageRequest packageRequest)
+    public Package ConvertToPackage(PackageRequest packageRequest)
     {
         return new Package(
             packageRequest.KolliId,
