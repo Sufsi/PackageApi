@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PackageApi.Facades;
 using PackageApi.Models;
-using FluentValidation.Results;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 

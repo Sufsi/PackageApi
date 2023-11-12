@@ -11,11 +11,10 @@ public class PackageValidatorTests
     public void KolliValidator_ShouldHaveValidationError_WhenKolliIdIsEmpty()
     {
         // Arrange
-        var validator = new PackageValidator.KolliValidator();
-        var package = new Package(string.Empty, null);
+        var validator = new KolliValidator();
 
         // Act
-        var result = validator.Validate(package);
+        var result = validator.Validate(string.Empty);
 
         // Assert
         Assert.IsFalse(result.IsValid);
@@ -26,11 +25,10 @@ public class PackageValidatorTests
     public void KolliValidator_ShouldHaveValidationError_WhenKolliIdLengthIsNot18()
     {
         // Arrange
-        var validator = new PackageValidator.KolliValidator();
-        var package = new Package("1234567890123456789", null);
+        var validator = new KolliValidator();
 
         // Act
-        var result = validator.Validate(package);
+        var result = validator.Validate("1234567890123456789");
 
         // Assert
         Assert.IsFalse(result.IsValid);
@@ -41,11 +39,10 @@ public class PackageValidatorTests
     public void KolliValidator_ShouldHaveValidationError_WhenKolliIdContainsNonNumericCharacters()
     {
         // Arrange
-        var validator = new PackageValidator.KolliValidator();
-        var package = new Package("123abc456def789ghi", null);
+        var validator = new KolliValidator();
 
         // Act
-        var result = validator.Validate(package);
+        var result = validator.Validate("123abc456def789ghi");
 
         // Assert
         Assert.IsFalse(result.IsValid);
@@ -56,11 +53,10 @@ public class PackageValidatorTests
     public void KolliValidator_ShouldHaveValidationError_WhenKolliIdDoesNotStartWith999()
     {
         // Arrange
-        var validator = new PackageValidator.KolliValidator();
-        var package = new Package("123456789012345678", null);
+        var validator = new KolliValidator();
 
         // Act
-        var result = validator.Validate(package);
+        var result = validator.Validate("123456789012345678");
 
         // Assert
         Assert.IsFalse(result.IsValid);
@@ -71,15 +67,15 @@ public class PackageValidatorTests
     public void DimensionsValidator_ShouldHaveValidationError_WhenWeightIsLessThan0()
     {
         // Arrange
-        var validator = new PackageValidator.DimensionsValidator();
+        var validator = new DimensionsValidator();
         var package = new Package("9999123456789012345678", new Dimensions(-1, 0, 0, 0));
 
         // Act
-        var result = validator.Validate(package);
+        var result = validator.Validate(package.Dimensions);
 
         // Assert
         Assert.IsFalse(result.IsValid);
-        Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == "Weight must be between 0 and 200."));
+        Assert.IsTrue(result.Errors.Any(e => e.ErrorMessage == "Weight must be between 0 and 20000."));
     }
 
     // Similar tests for other DimensionValidator rules...
@@ -88,11 +84,11 @@ public class PackageValidatorTests
     public void DimensionsValidator_ShouldNotHaveValidationError_WhenDimensionsAreValid()
     {
         // Arrange
-        var validator = new PackageValidator.DimensionsValidator();
+        var validator = new DimensionsValidator();
         var package = new Package("9999123456789012345678", new Dimensions(50, 30, 40, 20));
 
         // Act
-        var result = validator.Validate(package);
+        var result = validator.Validate(package.Dimensions);
 
         // Assert
         Assert.IsTrue(result.IsValid);

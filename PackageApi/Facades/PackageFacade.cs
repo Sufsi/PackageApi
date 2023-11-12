@@ -1,9 +1,6 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using PackageApi.Infrastructure;
 using PackageApi.Models;
-using PackageApi.Validators;
 
 namespace PackageApi.Facades;
 public interface IPackageFacade

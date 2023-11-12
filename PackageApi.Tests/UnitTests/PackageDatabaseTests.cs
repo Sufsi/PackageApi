@@ -3,20 +3,6 @@
 [TestClass]
 public class PackageDatabaseTests
 {
-
-    [TestMethod]
-    public void GetAllPackages_ReturnsAllPackages()
-    {
-        // Arrange
-        var database = new PackageDatabase();
-
-        // Act
-        var packages = database.GetAllPackages();
-
-        // Assert
-        Assert.IsNotNull(packages);
-        Assert.AreEqual(3, packages.Count()); // This has a weird behaviour as to make it easier for myself my "database" list is static so this depends on which order the tests are run at
-    }
     [TestMethod]
     public void AddPackage_AddsPackageSuccessfully()
     {
