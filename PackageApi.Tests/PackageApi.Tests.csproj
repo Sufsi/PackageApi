@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PackageApi.Infrastructure\PackageApi.Infrastructure.csproj" />
+    <ProjectReference Include="..\PackageApi\PackageApi.csproj" />
   </ItemGroup>
 
 </Project>

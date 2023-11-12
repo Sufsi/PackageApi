@@ -22,7 +22,7 @@ public class PackageDatabaseTests
     {
         // Arrange
         var database = new PackageDatabase();
-        var package = new Package("Test123", new Dimensions(100, 20, 30, 40));
+        var package = new Package("999912345", new Dimensions(100, 20, 30, 40));
 
         // Act
         var result = database.AddPackage(package);
@@ -36,15 +36,15 @@ public class PackageDatabaseTests
     {
         // Arrange
         var database = new PackageDatabase();
-        var package = new Package("Test123", new Dimensions(100, 20, 30, 40));
+        var package = new Package("999912345", new Dimensions(100, 20, 30, 40));
         database.AddPackage(package);
 
         // Act
-        var retrievedPackage = database.GetPackage("Test123");
+        var retrievedPackage = database.GetPackage("999912345");
 
         // Assert
         Assert.IsNotNull(retrievedPackage);
-        Assert.AreEqual("Test123", retrievedPackage.KolliId);
+        Assert.AreEqual("999912345", retrievedPackage.KolliId);
     }
 
     [TestMethod]

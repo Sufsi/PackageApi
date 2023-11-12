@@ -4,7 +4,7 @@ namespace PackageApi.Infrastructure.Database;
 
 public class PackageDatabase : IDatabase
 {
-    private static List<Package> packages = new List<Package>() { new Package("9999Test", new Dimensions(200, 32, 54, 64)) };
+    private static List<Package> packages = new List<Package>() { new Package("999912345", new Dimensions(200, 32, 54, 64)) };
 
     public bool AddPackage(Package package)
     {
