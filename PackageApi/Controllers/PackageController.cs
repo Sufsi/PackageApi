@@ -65,6 +65,11 @@ public class PackageController : ControllerBase
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "Package is required")]
     public async Task<ActionResult<bool>> CreatePackage([Required][FromBody]Package package)
     {
+        var validate = await validator.ValidateAsync(package.KolliId);
+
+        if (!validate.IsValid)
+            return BadRequest($"KolliId is not valid: {string.Join(", ", validate.Errors.Select(x => x.ErrorMessage))}");
+
         var result = await packageFacade.CreatePackage(package);
         return result == true ? Ok() : BadRequest();
     }

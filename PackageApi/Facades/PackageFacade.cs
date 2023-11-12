@@ -13,13 +13,13 @@ public class PackageFacade : IPackageFacade
 {
     private readonly ILogger<PackageFacade> logger;
     private readonly IRepositoryFactory repositoryFactory;
-    private readonly IValidator<Dimensions> packageValidator;
+    private readonly IValidator<Dimensions> dimensionsValidator;
 
-    public PackageFacade(ILogger<PackageFacade> logger, IRepositoryFactory repositoryFactory, IValidator<Dimensions> packageValidator)
+    public PackageFacade(ILogger<PackageFacade> logger, IRepositoryFactory repositoryFactory, IValidator<Dimensions> dimensionsValidator)
     {
         this.logger = logger;
         this.repositoryFactory = repositoryFactory;
-        this.packageValidator = packageValidator;
+        this.dimensionsValidator = dimensionsValidator;
     }
 
     public async Task<IEnumerable<Package?>> GetPackages()
@@ -42,7 +42,7 @@ public class PackageFacade : IPackageFacade
 
     public async Task<bool> CreatePackage(Package package)
     {
-        var validationResult = await packageValidator.ValidateAsync(package.Dimensions);
+        var validationResult = await dimensionsValidator.ValidateAsync(package.Dimensions);
         logger.LogInformation(validationResult.IsValid ? $"{package.KolliId} valid package" : $"{package.KolliId} contains properties outside of limitations");
 
         var repo = repositoryFactory.GetRepository<Infrastructure.Models.Package>();

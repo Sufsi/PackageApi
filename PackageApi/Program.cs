@@ -6,7 +6,6 @@ using PackageApi.Infrastructure.Repositories;
 using PackageApi.Infrastructure.Database;
 using FluentValidation;
 using PackageApi.Facades;
-using Swashbuckle.AspNetCore;
 using Swashbuckle.AspNetCore.Filters;
 using PackageApi.Examples;
 
@@ -31,6 +30,10 @@ builder.Services.AddTransient<IRepositoryFactory, RepositoryFactory>();
 builder.Services.AddTransient<IPackageFacade, PackageFacade>();
 builder.Services.AddTransient<IDatabase, PackageDatabase>();
 builder.Services.AddValidatorsFromAssemblyContaining<PackageApi.Validators.PackageValidator>();
+
+
+// I would really want to use this and stop our packages getting imported based on the validation result directly.
+//builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 
