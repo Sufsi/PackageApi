@@ -3,6 +3,10 @@ using PackageApi.Facades;
 using PackageApi.Models;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+using Swashbuckle.AspNetCore.Filters;
+using PackageApi.Examples;
 
 namespace PackageApi.Controllers;
 
@@ -22,30 +26,46 @@ public class PackageController : ControllerBase
     }
 
     [HttpGet("/package")]
-    public ActionResult<IEnumerable<Package>> GetPackages()
+    [SwaggerRequestExample(typeof(IEnumerable<Package>), typeof(PackagesExample))]
+    [SwaggerResponse((int)HttpStatusCode.OK)]
+    [SwaggerResponse((int)HttpStatusCode.NotFound, "No packages was found in the database")]
+    public async Task<ActionResult<IEnumerable<Package>>> GetPackages()
     {
-        var result = packageFacade.GetPackages();
+        var result = await packageFacade.GetPackages();
+        if (result == null)
+            return NotFound($"No packages was found in the database");
+
         return Ok(result);
     }
 
     [HttpGet("/package/{kolliId}")]
-    public ActionResult<Package> GetPackageDimensions([Required][FromRoute] string kolliId)
+    [SwaggerRequestExample(typeof(Package), typeof(PackageExample))]
+    [SwaggerResponse((int)HttpStatusCode.OK)]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "KolliId did not pass the validation")]
+    [SwaggerResponse((int)HttpStatusCode.NotFound, "KolliId was not found in the database")]
+    public async Task<ActionResult<Package>> GetPackage([Required][FromRoute] string kolliId)
     {
-        var validate = validator.Validate(kolliId);
+        var validate = await validator.ValidateAsync(kolliId);
 
         if (!validate.IsValid)
-        {
             return BadRequest($"KolliId is not valid: {string.Join(", ",validate.Errors.Select(x => x.ErrorMessage))}");
-        }
 
-        var result = packageFacade.GetPackage(kolliId);
+        var result = await packageFacade.GetPackage(kolliId);
+
+        if (result == null)
+            return NotFound($"KolliId:{kolliId} was not found in the database");
+
+
         return Ok(result);
     }
 
     [HttpPost("/package")]
-    public ActionResult<Package> CreatePackage(Package package)
+    [SwaggerRequestExample(typeof(Package), typeof(PackageExample))]
+    [SwaggerResponse((int)HttpStatusCode.OK)]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "Package is required")]
+    public async Task<ActionResult<bool>> CreatePackage([Required][FromBody]Package package)
     {
-        var result = packageFacade.CreatePackage(package);
-        return Ok(result);
+        var result = await packageFacade.CreatePackage(package);
+        return result == true ? Ok() : BadRequest();
     }
 }

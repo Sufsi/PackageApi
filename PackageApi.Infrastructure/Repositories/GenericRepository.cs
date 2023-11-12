@@ -14,7 +14,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : Entity
 
     public IDatabase Database { get; }
 
-    public Task Create(T entity)
+    public Task<bool> Create(T entity)
     {
         var result = Database.AddPackage(entity as Package);
         return Task.FromResult(result);

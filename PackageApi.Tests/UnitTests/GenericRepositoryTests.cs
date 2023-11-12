@@ -9,7 +9,7 @@ public class GenericRepositoryTests
         // Arrange
         var database = new PackageDatabase();
         var repository = new GenericRepository<Package>(database);
-        var package = new Package("999912345", new Dimensions(200, 32, 30, 40));
+        var package = new Package("9999123450000000000", new Dimensions(200, 32, 30, 40));
 
         // Act
         var result = repository.Create(package);
@@ -24,15 +24,15 @@ public class GenericRepositoryTests
         // Arrange
         var database = new PackageDatabase();
         var repository = new GenericRepository<Package>(database);
-        var package = new Package("999912345", new Dimensions(200, 32, 30, 40));
+        var package = new Package("9999999912345000000000012345", new Dimensions(200, 32, 30, 40));
         database.AddPackage(package);
 
         // Act
-        var retrievedPackage = await repository.Get("999912345");
+        var retrievedPackage = await repository.Get("9999123450000000000");
 
         // Assert
         Assert.IsNotNull(retrievedPackage);
-        Assert.AreEqual("999912345", retrievedPackage.KolliId);
+        Assert.AreEqual("9999123450000000000", retrievedPackage.KolliId);
     }
 
     [TestMethod]

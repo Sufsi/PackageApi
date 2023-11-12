@@ -6,5 +6,5 @@ public interface IGenericRepository<T> where T : Entity
 {
     Task<IEnumerable<T>> GetAll();
     Task<T> Get(string id);
-    Task Create(T entity);
+    Task<bool> Create(T entity);
 }

@@ -6,6 +6,9 @@ using PackageApi.Infrastructure.Repositories;
 using PackageApi.Infrastructure.Database;
 using FluentValidation;
 using PackageApi.Facades;
+using Swashbuckle.AspNetCore;
+using Swashbuckle.AspNetCore.Filters;
+using PackageApi.Examples;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +20,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Package Api", Version = "1.0" });
+    c.ExampleFilters();
+    c.EnableAnnotations();
 });
+builder.Services.AddSwaggerExamplesFromAssemblyOf<PackageExample>();
+builder.Services.AddSwaggerExamplesFromAssemblyOf<PackagesExample>();
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IRepositoryFactory, RepositoryFactory>();
