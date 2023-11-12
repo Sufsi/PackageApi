@@ -22,7 +22,7 @@ public class PackageDatabaseTests
     {
         // Arrange
         var database = new PackageDatabase();
-        var package = new Package("Test123", 10, new Dimensions("20", "30", "40"));
+        var package = new Package("Test123", new Dimensions(100, 20, 30, 40));
 
         // Act
         var result = database.AddPackage(package);
@@ -36,7 +36,7 @@ public class PackageDatabaseTests
     {
         // Arrange
         var database = new PackageDatabase();
-        var package = new Package("Test123", 10, new Dimensions("20", "30", "40"));
+        var package = new Package("Test123", new Dimensions(100, 20, 30, 40));
         database.AddPackage(package);
 
         // Act

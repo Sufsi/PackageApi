@@ -4,6 +4,8 @@ using PackageApi.Infrastructure;
 using PackageApi.Infrastructure.Interfaces;
 using PackageApi.Infrastructure.Repositories;
 using PackageApi.Infrastructure.Database;
+using FluentValidation;
+using PackageApi.Facades;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,9 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IRepositoryFactory, RepositoryFactory>();
+builder.Services.AddTransient<IPackageFacade, PackageFacade>();
 builder.Services.AddTransient<IDatabase, PackageDatabase>();
+builder.Services.AddValidatorsFromAssemblyContaining<PackageApi.Validators.PackageValidator.KolliValidator>();
 
 var app = builder.Build();
 
@@ -35,5 +39,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+            
+
 
 app.Run();

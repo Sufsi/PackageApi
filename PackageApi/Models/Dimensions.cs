@@ -1,4 +1,4 @@
-﻿namespace PackageApi.Infrastructure.Models;
+﻿namespace PackageApi.Models;
 
 public class Dimensions
 {
