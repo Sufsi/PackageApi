@@ -9,8 +9,8 @@ namespace PackageApi.Examples
         {
             return new List<Package> 
             {
-                    new Package("999123450000000000", new Dimensions(20000, 32, 54, 34, true)),
-                    new Package("999543210000000000", new Dimensions(30000, 85, 50, 30, false))
+                    new Package("999123455432100000", new Dimensions(20000, 32, 54, 34, true)),
+                    new Package("999543215432100000", new Dimensions(30000, 85, 50, 30, false))
             };
         }
     }
@@ -18,7 +18,7 @@ namespace PackageApi.Examples
     {
         public Package GetExamples()
         {
-           return new Package("999123450000000000", new Dimensions(20000, 32, 54, 34, true));
+           return new Package("999123455432100000", new Dimensions(20000, 32, 54, 34, true));
         }
     }
 }
